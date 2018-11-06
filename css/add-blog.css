@@ -1,0 +1,26 @@
+body {
+  background: url(post.jpg) no-repeat center fixed;
+  background-position: 100%;
+  background-size: 70% auto;
+  background-color: black;
+}
+
+#form{
+  width:30%;
+  height: 100%;
+  height: auto;
+  padding: .5%;
+  color: #cec0ba;
+  background-color: black;
+}
+
+input{
+  border-radius: 15px;
+  border-color: red;
+}
+
+textarea{
+  border-radius: 15px;
+  border-color: red;
+
+}

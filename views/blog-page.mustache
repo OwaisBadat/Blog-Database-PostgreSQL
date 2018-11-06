@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="/blog-page.css"></link>
+    <title></title>
+  </head>
+  <body>
+    {{#blogs}}
+    <div id='title'>
+    <h1>{{blogtitle}}</h1>
+    <p>by:{{blogauthor}}<br>
+      Date:{{blogdate}}</p>
+    </div>
+    <div id="para">
+    <h4>{{blogpost}}</h4>
+  </div>
+    {{/blogs}}
+
+  </body>
+</html>

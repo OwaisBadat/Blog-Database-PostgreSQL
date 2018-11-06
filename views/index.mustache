@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <title>Blog DB</title>
+  </head>
+  <body>
+    <div class="jumbotron">
+      <h1 class="display-4">Hello, Readers</h1>
+      <p class="lead">This is a simple database containing all the blogs your heart desires!</p>
+      <!-- <hr class="my-4"> -->
+      <a class="btn btn-primary btn-lg" href="#blogList" role="button">Blog Posts</a>
+      <a class="btn btn-primary btn-lg" href="/add-blog" role="button">Add Blog</a>
+    </div>
+
+      <div id="blogList">
+        <table class="table table-bordered">
+  <thead style="
+    text-align: -webkit-center;" class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Author</th>
+      <th scope="col">Title</th>
+      <th scope="col">Date</th>
+    <th colspan="3" scope="col">Actions</th>
+
+
+    </tr>
+  </thead>
+  <tbody>
+    {{#blogs}}
+
+    <tr style="
+    text-align: -webkit-center;">
+      <th scope="row"style="width: 2%;">{{blogid}}</th>
+      <td>{{blogauthor}}</td>
+      <td>{{blogtitle}}</td>
+      <td style="width: 15%;">{{blogdate}}</td>
+
+      <td style="width: 2%;">
+        <!-- <a class="btn btn-primary btn-md" name"blogid" href="/blog-page" role="button">Read</a> -->
+        <form action="/blog-page" method="POST">
+      <input type="hidden" name="blogid" value="{{blogid}}" />
+      <div><input class="btn btn-primary btn-md" type="submit" value="Read"/>
+    </form>
+
+      <td style="width: 2%;">
+        <a class="btn btn-primary btn-md" href="/update-blog" role="button">Update</a>
+      </td>
+
+      <td style="width: 2%;">
+        <form action="/delete-blog" method="POST">
+      <input type="hidden" name="blogid" value="{{blogid}}" />
+      <div><input class="btn btn-primary btn-md" type="submit" value="Remove"/>
+    </form>
+      </td>
+
+    </tr>
+
+    {{/blogs}}
+  </tbody>
+</table>
+      </div>
+
+
+
+
+
+
+
+
+
+  </body>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</html>
