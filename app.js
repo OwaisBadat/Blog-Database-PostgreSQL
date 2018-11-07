@@ -1,4 +1,6 @@
 const express = require('express')
+const Blog = require('./models/blog')
+const Review = require('./models/review')
 const app = express()
 const bodyparser = require('body-parser')
 const pgp = require('pg-promise')()
@@ -10,6 +12,8 @@ const db = pgp(connectionString)
 
 app.use(bodyparser.urlencoded({ extended : false}))
 
+let blogs = []
+
 app.use(express.static('css'))
 app.engine('mustache',mustacheExpress())
 app.set('views', './views')
@@ -18,17 +22,37 @@ app.set('view engine','mustache')
 
 app.post('/blog-page',function(req,res){
   let blogid = req.body.blogid
+  // console.log(blogid)
+
+  db.any('SELECT blogs.blogid,blogauthor,blogdate,blogtitle,blogpost,blogcomment,commentid FROM blogs JOIN blogcomments on blogs.blogid = blogcomments.blogid WHERE blogs.blogid = $1',[blogid])
+  .then(function(items){
+    console.log(items)
 
 
-  db.any('SELECT * from blogs WHERE blogid = $1',[blogid])
-  .then(function(result){
+    items.forEach(function(item){
 
-    res.render('blog-page',{blogs: result})
+    let existingBlog = blogs.find(function(blog){
+      return blog.blogid = item.blogid
+      console.log(existingBlog)
+    })
+    if(existingBlog == null){
+      let blog = new Blog(item.blogid,item.blogtitle,item.blogdate,item.blogauthor,item.blogpost)
+      let review = new Review(item.commentid,item.commentpost)
+      blog.reviews.push(review)
+      blogs.push(blog)
+    } else {
+            let review = new Review(item.commentid,item.commentpost)
+            existingBlog.reviews.push(review)
+    }
+
+    })
+
+    console.log(blogs)
+    res.render('blog-page',{blogs : blogs})
 
   })
+
 })
-
-
 
 app.post('/delete-blog',function(req,res){
   let blogid = req.body.blogid
@@ -41,6 +65,36 @@ app.post('/delete-blog',function(req,res){
     console.log(error)
   })
 })
+
+app.get('/update-blog/:blogid',function(req,res){
+
+  let blogid = req.params.blogid
+
+  db.one('SELECT blogtitle,blogauthor,blogdate,blogpost FROM blogs WHERE blogid = $1',[blogid])
+  .then(function(result){
+    console.log("result value")
+    console.log(result)
+    res.render('update-blog',{blog : result })
+  })
+
+})
+
+app.post('/add-comment',function(req,res){
+  let blogcomment = req.body.blogcomment
+  let blogid = req.body.blogid
+
+  console.log(blogcomment)
+  console.log(blogid)
+
+  db.none('INSERT INTO blogcomments(blogcomment,blogid)VALUES($1,$2)',[blogcomment,blogid])
+  .then(function(){
+    res.render('/blog-page')
+  })
+  .catch(function(error){
+  console.log(error)
+  })
+})
+
 
 
 app.post('/add-blog',function(req,res){
