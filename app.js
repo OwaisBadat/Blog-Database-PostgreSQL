@@ -19,6 +19,10 @@ app.engine('mustache',mustacheExpress())
 app.set('views', './views')
 app.set('view engine','mustache')
 
+app.get('/api/blogs',function(req,res){
+  res.json(blogs)
+})
+
 
 app.post('/blog-page',function(req,res){
   let blogid = req.body.blogid
@@ -26,27 +30,34 @@ app.post('/blog-page',function(req,res){
 
   db.any('SELECT blogs.blogid,blogauthor,blogdate,blogtitle,blogpost,blogcomment,commentid FROM blogs JOIN blogcomments on blogs.blogid = blogcomments.blogid WHERE blogs.blogid = $1',[blogid])
   .then(function(items){
-    console.log(items)
+
 
 
     items.forEach(function(item){
 
     let existingBlog = blogs.find(function(blog){
       return blog.blogid = item.blogid
-      console.log(existingBlog)
+
     })
     if(existingBlog == null){
       let blog = new Blog(item.blogid,item.blogtitle,item.blogdate,item.blogauthor,item.blogpost)
-      let review = new Review(item.commentid,item.commentpost)
+      let review = new Review(item.blogcomment)
       blog.reviews.push(review)
       blogs.push(blog)
     } else {
-            let review = new Review(item.commentid,item.commentpost)
+            let review = new Review(item.blogcomment)
             existingBlog.reviews.push(review)
     }
 
     })
 
+    // console.log(blogs[0].reviews[0])
+    for (let i=0;i<blogs.length;i++){
+      // console.log(blogs[i].reviews[0].commentid)
+      for(let j=0;j<blogs[i].reviews.length;j++){
+        console.log(blogs[i].reviews[j])
+      }
+    }
     console.log(blogs)
     res.render('blog-page',{blogs : blogs})
 
@@ -88,7 +99,7 @@ app.post('/add-comment',function(req,res){
 
   db.none('INSERT INTO blogcomments(blogcomment,blogid)VALUES($1,$2)',[blogcomment,blogid])
   .then(function(){
-    res.render('/blog-page')
+    res.redirect('/blog-page')
   })
   .catch(function(error){
   console.log(error)

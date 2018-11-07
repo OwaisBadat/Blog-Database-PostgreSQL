@@ -2,8 +2,8 @@
 
 class Review {
 
-  constructor(commentid,commentpost) {
-    this.commentid = commentid
+  constructor(blogcomment,commentpost) {
+    this.blogcomment = blogcomment
     this.commentpost = commentpost
   }
 
